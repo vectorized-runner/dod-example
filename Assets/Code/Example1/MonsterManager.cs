@@ -41,18 +41,37 @@ namespace Code
 	}
 
 	[BurstCompile]
-	public struct PositionJob : IJobParallelFor
+	public struct PositionJob : IJob
 	{
-		public NativeArray<float2> Position;
+		public NativeArray<float3> Position;
 
 		[ReadOnly]
-		public NativeArray<float2> Velocity;
+		public NativeArray<float3> Velocity;
 
 		public float Dt;
 
-		public void Execute(int i)
+		public void Execute()
 		{
-			Position[i] = Velocity[i] * Dt;
+			for (int i = 0; i < Position.Length; i++)
+			{
+		       // public static float3 operator * (float lhs, float3 rhs)
+		       // { return new float3 (lhs * rhs.x, lhs * rhs.y, lhs * rhs.z); }
+		       
+		       // public static float3 operator + (float3 lhs, float3 rhs)
+		       // { return new float3 (lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z); }
+		       
+		        // Original method
+				// Position[i] = Position[i] + Velocity[i] * Dt;
+				
+				var pos = Position[i];
+				var vel = Velocity[i];
+				var dt = Dt;
+				var newPosX = pos.x + vel.x * dt;
+				var newPosY = pos.y + vel.y * dt;
+				var newPosZ = pos.z + vel.z * dt;
+				var newPos = new float3(newPosX, newPosY, newPosZ);
+				Position[i] = newPos;
+			}
 		}
 	}
 
@@ -107,7 +126,7 @@ namespace Code
 				Dt = dt,
 				Position = _aliveMonster.Position,
 				Velocity = _aliveMonster.Velocity
-			}.Schedule(_aliveMonsterCount, 64);
+			}.Schedule();
 
 			var staminaJob = new StaminaJob
 			{
