@@ -7,10 +7,8 @@ namespace Code
 		public float2[] Velocity;
 		public float[] Health;
 		public float[] HealthRegen;
-		public float[] MaxHealth;
 		public float[] Stamina;
 		public float[] StaminaRegen;
-		public float[] MaxStamina;
 		public int[] Target;
 		public float2[] Position;
 		public float[] RespawnTime;

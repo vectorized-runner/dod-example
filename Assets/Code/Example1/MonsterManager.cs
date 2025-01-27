@@ -15,11 +15,14 @@ namespace Code
 		private DamagingMonsterArray _damagingMonster;
 		private int _damagingMonsterCount;
 
+		private float _maxHealth;
+		private float _maxStamina;
+		
 		public void GameLoop()
 		{
 			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				_aliveMonster.Health[i] = math.clamp(_aliveMonster.Health[i] + _aliveMonster.HealthRegen[i] * Time.deltaTime, 0, _aliveMonster.MaxHealth[i]);
+				_aliveMonster.Health[i] = math.clamp(_aliveMonster.Health[i] + _aliveMonster.HealthRegen[i] * Time.deltaTime, 0, _maxHealth);
 			}
 			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
@@ -27,7 +30,7 @@ namespace Code
 			}
 			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				_aliveMonster.Stamina[i] = math.clamp(_aliveMonster.Stamina[i] + _aliveMonster.StaminaRegen[i] * Time.deltaTime, 0, _aliveMonster.MaxStamina[i]);
+				_aliveMonster.Stamina[i] = math.clamp(_aliveMonster.Stamina[i] + _aliveMonster.StaminaRegen[i] * Time.deltaTime, 0, _maxStamina);
 			}
 			for (int i = 0; i < _deadMonsterCount; i++)
 			{
