@@ -4,18 +4,7 @@ namespace Code
 	{
 		public int Damage { get; set; }
 
-		public void DamagingMonsterUpdateAlive()
-		{
-			UpdateDamage();
-			SimpleMonsterUpdateAlive();
-		}
-
-		public void DamagingMonsterUpdateDead()
-		{
-			UpdateRespawn();
-		}
-
-		private void UpdateDamage()
+		public void UpdateDamage()
 		{
 			// ... Damage the Player
 		}

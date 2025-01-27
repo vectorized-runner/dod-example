@@ -5,19 +5,7 @@ namespace Code
 {
 	public class SimpleMonster : Monster
 	{
-		public void SimpleMonsterUpdateAlive()
-		{
-			UpdateHealth();
-			UpdatePosition();
-			UpdateStamina();
-		}
-
-		public void SimpleMonsterUpdateDead()
-		{
-			UpdateRespawn();
-		}
-
-		protected void UpdateRespawn()
+		public void UpdateRespawn()
 		{
 			if (Time.time > RespawnTime)
 			{
@@ -25,17 +13,17 @@ namespace Code
 			}
 		}
 
-		private void UpdateStamina()
+		public void UpdateStamina()
 		{
 			Stamina = math.clamp(Stamina + StaminaRegen * Time.deltaTime, 0, MaxStamina);
 		}
 
-		private void UpdatePosition()
+		public void UpdatePosition()
 		{
 			Position += Velocity * Time.deltaTime;
 		}
 
-		private void UpdateHealth()
+		public void UpdateHealth()
 		{
 			Health = math.clamp(Health + HealthRegen * Time.deltaTime, 0, MaxHealth);
 		}

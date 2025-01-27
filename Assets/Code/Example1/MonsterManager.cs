@@ -11,22 +11,42 @@ namespace Code
 		{
 			foreach (var monster in _aliveSimpleMonsters)
 			{
-				monster.SimpleMonsterUpdateAlive();
+				monster.UpdateHealth();
 			}
-
+			foreach (var monster in _aliveSimpleMonsters)
+			{
+				monster.UpdatePosition();
+			}
+			foreach (var monster in _aliveSimpleMonsters)
+			{
+				monster.UpdateStamina();
+			}
 			foreach (var monster in _deadSimpleMonsters)
 			{
-				monster.SimpleMonsterUpdateDead();
+				monster.UpdateRespawn();
 			}
-
+			
+			// 
+			
 			foreach (var monster in _aliveDamagingMonsters)
 			{
-				monster.DamagingMonsterUpdateAlive();
+				monster.UpdateHealth();
 			}
-
+			foreach (var monster in _aliveDamagingMonsters)
+			{
+				monster.UpdatePosition();
+			}
+			foreach (var monster in _aliveDamagingMonsters)
+			{
+				monster.UpdateStamina();
+			}
+			foreach (var monster in _aliveDamagingMonsters)
+			{
+				monster.UpdateDamage();
+			}
 			foreach (var monster in _deadDamagingMonsters)
 			{
-				monster.DamagingMonsterUpdateDead();
+				monster.UpdateRespawn();
 			}
 		}
 	}
