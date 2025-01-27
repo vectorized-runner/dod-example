@@ -2,13 +2,18 @@ namespace Code
 {
 	public class Game
 	{
-		private Monster[] _monsters;
-
+		private SimpleMonster[] _simpleMonsters;
+		private DamagingMonster[] _damagingMonsters;
+		
 		public void GameLoop()
 		{
-			foreach (var monster in _monsters)
+			foreach (var monster in _simpleMonsters)
 			{
-				monster.Update();
+				monster.SimpleMonsterUpdate();
+			}
+			foreach (var monster in _damagingMonsters)
+			{
+				monster.DamaingMonsterUpdate();
 			}
 		}
 	}

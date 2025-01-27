@@ -4,10 +4,10 @@ namespace Code
 	{
 		public int Damage { get; set; }
 		
-		public override void Update()
+		public void DamaingMonsterUpdate()
 		{
 			UpdateDamage();
-			base.Update();
+			SimpleMonsterUpdate();
 		}
 
 		private void UpdateDamage()

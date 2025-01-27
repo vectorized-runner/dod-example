@@ -15,7 +15,5 @@ namespace Code
 		public float2 Position { get; set; }
 		public bool IsAlive { get; set; }
 		public float RespawnTime { get; set; }
-		
-		public abstract void Update();
 	}
 }

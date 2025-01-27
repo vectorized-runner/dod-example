@@ -5,7 +5,7 @@ namespace Code
 {
 	public class SimpleMonster : Monster
 	{
-		public override void Update()
+		public void SimpleMonsterUpdate()
 		{
 			if (IsAlive)
 			{
