@@ -1,4 +1,6 @@
 using System;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace Code
 {
@@ -13,34 +15,37 @@ namespace Code
 		{
 			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
 			{
-				monster.UpdateHealth();
+				monster.Data.Health = math.clamp(monster.Data.Health + monster.Data.HealthRegen * Time.deltaTime, 0, monster.Data.MaxHealth);
 			}
 			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
 			{
-				monster.UpdatePosition();
+				monster.Data.Position += monster.Data.Velocity * Time.deltaTime;
 			}
 			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
 			{
-				monster.UpdateStamina();
+				monster.Data.Stamina = math.clamp(monster.Data.Stamina + monster.Data.StaminaRegen * Time.deltaTime, 0, monster.Data.MaxStamina);
 			}
 			foreach (ref var monster in _deadSimpleMonsters.AsSpan())
 			{
-				monster.UpdateRespawn();
+				if (Time.time > monster.Data.RespawnTime)
+				{
+					monster.Data.IsAlive = true;
+				}
 			}
 			
 			// 
 			
 			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
-				monster.SimpleMonster.UpdateHealth();
+				monster.Data.Health = math.clamp(monster.Data.Health + monster.Data.HealthRegen * Time.deltaTime, 0, monster.Data.MaxHealth);
 			}
 			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
-				monster.SimpleMonster.UpdatePosition();
+				monster.Data.Position += monster.Data.Velocity * Time.deltaTime;
 			}
 			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
-				monster.SimpleMonster.UpdateStamina();
+				monster.Data.Stamina = math.clamp(monster.Data.Stamina + monster.Data.StaminaRegen * Time.deltaTime, 0, monster.Data.MaxStamina);
 			}
 			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
@@ -48,7 +53,10 @@ namespace Code
 			}
 			foreach (ref var monster in _deadDamagingMonsters.AsSpan())
 			{
-				monster.SimpleMonster.UpdateRespawn();
+				if (Time.time > monster.Data.RespawnTime)
+				{
+					monster.Data.IsAlive = true;
+				}
 			}
 		}
 	}

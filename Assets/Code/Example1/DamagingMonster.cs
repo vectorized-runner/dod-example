@@ -2,7 +2,7 @@ namespace Code
 {
 	public struct DamagingMonster
 	{
-		public SimpleMonster SimpleMonster;
+		public MonsterData Data;
 		public int Damage { get; set; }
 
 		public void UpdateDamage()
