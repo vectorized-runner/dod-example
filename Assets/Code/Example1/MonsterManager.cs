@@ -20,21 +20,24 @@ namespace Code
 		
 		public void GameLoop()
 		{
+			var dt = Time.deltaTime;
+			var time = Time.time;
+			
 			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				_aliveMonster.Health[i] = math.clamp(_aliveMonster.Health[i] + _aliveMonster.HealthRegen[i] * Time.deltaTime, 0, _maxHealth);
+				_aliveMonster.Health[i] = math.clamp(_aliveMonster.Health[i] + _aliveMonster.HealthRegen[i] * dt, 0, _maxHealth);
 			}
 			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				_aliveMonster.Position[i] += _aliveMonster.Velocity[i] * Time.deltaTime;
+				_aliveMonster.Position[i] += _aliveMonster.Velocity[i] * dt;
 			}
 			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				_aliveMonster.Stamina[i] = math.clamp(_aliveMonster.Stamina[i] + _aliveMonster.StaminaRegen[i] * Time.deltaTime, 0, _maxStamina);
+				_aliveMonster.Stamina[i] = math.clamp(_aliveMonster.Stamina[i] + _aliveMonster.StaminaRegen[i] * dt, 0, _maxStamina);
 			}
 			for (int i = 0; i < _deadMonsterCount; i++)
 			{
-				if (Time.time > _deadMonster.RespawnTime[i])
+				if (time > _deadMonster.RespawnTime[i])
 				{
 					_deadMonster.IsAlive[i] = true;
 				}
