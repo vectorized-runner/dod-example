@@ -6,58 +6,38 @@ namespace Code
 {
 	public class Game
 	{
-		private SimpleMonster[] _aliveSimpleMonsters;
-		private SimpleMonster[] _deadSimpleMonsters;
-		private DamagingMonster[] _aliveDamagingMonsters;
-		private DamagingMonster[] _deadDamagingMonsters;
+		private MonsterDataArray _aliveMonster;
+		private int _aliveMonsterCount;
+
+		private MonsterDataArray _deadMonster;
+		private int _deadMonsterCount;
+
+		private DamagingMonsterArray _damagingMonster;
+		private int _damagingMonsterCount;
 
 		public void GameLoop()
 		{
-			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
+			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				monster.Data.Health = math.clamp(monster.Data.Health + monster.Data.HealthRegen * Time.deltaTime, 0, monster.Data.MaxHealth);
+				_aliveMonster.Health[i] = math.clamp(_aliveMonster.Health[i] + _aliveMonster.HealthRegen[i] * Time.deltaTime, 0, _aliveMonster.MaxHealth[i]);
 			}
-			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
+			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				monster.Data.Position += monster.Data.Velocity * Time.deltaTime;
+				_aliveMonster.Position[i] += _aliveMonster.Velocity[i] * Time.deltaTime;
 			}
-			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
+			for (int i = 0; i < _aliveMonsterCount; i++)
 			{
-				monster.Data.Stamina = math.clamp(monster.Data.Stamina + monster.Data.StaminaRegen * Time.deltaTime, 0, monster.Data.MaxStamina);
+				_aliveMonster.Stamina[i] = math.clamp(_aliveMonster.Stamina[i] + _aliveMonster.StaminaRegen[i] * Time.deltaTime, 0, _aliveMonster.MaxStamina[i]);
 			}
-			foreach (ref var monster in _deadSimpleMonsters.AsSpan())
+			for (int i = 0; i < _deadMonsterCount; i++)
 			{
-				if (Time.time > monster.Data.RespawnTime)
+				if (Time.time > _deadMonster.RespawnTime[i])
 				{
-					monster.Data.IsAlive = true;
+					_deadMonster.IsAlive[i] = true;
 				}
 			}
 			
-			// 
-			
-			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
-			{
-				monster.Data.Health = math.clamp(monster.Data.Health + monster.Data.HealthRegen * Time.deltaTime, 0, monster.Data.MaxHealth);
-			}
-			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
-			{
-				monster.Data.Position += monster.Data.Velocity * Time.deltaTime;
-			}
-			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
-			{
-				monster.Data.Stamina = math.clamp(monster.Data.Stamina + monster.Data.StaminaRegen * Time.deltaTime, 0, monster.Data.MaxStamina);
-			}
-			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
-			{
-				monster.UpdateDamage();
-			}
-			foreach (ref var monster in _deadDamagingMonsters.AsSpan())
-			{
-				if (Time.time > monster.Data.RespawnTime)
-				{
-					monster.Data.IsAlive = true;
-				}
-			}
+			// ...
 		}
 	}
 }

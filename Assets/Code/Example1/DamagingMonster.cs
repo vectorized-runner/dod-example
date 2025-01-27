@@ -1,13 +1,7 @@
 namespace Code
 {
-	public struct DamagingMonster
+	public struct DamagingMonsterArray
 	{
-		public MonsterData Data;
-		public int Damage { get; set; }
-
-		public void UpdateDamage()
-		{
-			// ... Damage the Player
-		}
+		public int[] Damage;
 	}
 }
