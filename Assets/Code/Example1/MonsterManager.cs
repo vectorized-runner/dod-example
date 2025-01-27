@@ -1,8 +1,11 @@
 using Unity.Burst;
+using Unity.Burst.Intrinsics;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86.Sse;
 
 namespace Code
 {
@@ -41,18 +44,28 @@ namespace Code
 	}
 
 	[BurstCompile]
-	public struct PositionJob : IJob
+	public unsafe struct PositionJob : IJob
 	{
-		public NativeArray<float3> Position;
+		// public NativeArray<float3> Position;
+		public NativeArray<float> PositionXs;
+		public NativeArray<float> PositionYs;
+		public NativeArray<float> PositionZs;
 
+		// public NativeArray<float3> Velocity;
 		[ReadOnly]
-		public NativeArray<float3> Velocity;
+		public NativeArray<float> VelocityXs;
+		[ReadOnly]
+		public NativeArray<float> VelocityYs;
+		[ReadOnly]
+		public NativeArray<float> VelocityZs;
 
 		public float Dt;
 
 		public void Execute()
 		{
-			for (int i = 0; i < Position.Length; i++)
+			var count = PositionXs.Length / 4;
+			
+			for (int i = 0; i < count; i += 4)
 			{
 		       // public static float3 operator * (float lhs, float3 rhs)
 		       // { return new float3 (lhs * rhs.x, lhs * rhs.y, lhs * rhs.z); }
@@ -62,15 +75,32 @@ namespace Code
 		       
 		        // Original method
 				// Position[i] = Position[i] + Velocity[i] * Dt;
+
 				
-				var pos = Position[i];
-				var vel = Velocity[i];
-				var dt = Dt;
-				var newPosX = pos.x + vel.x * dt;
-				var newPosY = pos.y + vel.y * dt;
-				var newPosZ = pos.z + vel.z * dt;
-				var newPos = new float3(newPosX, newPosY, newPosZ);
-				Position[i] = newPos;
+				// var pos = Position[i];
+				v128 posXs = load_ps((float*)PositionXs.GetUnsafePtr() + i);
+				v128 posYs = load_ps((float*)PositionYs.GetUnsafePtr() + i);
+				v128 posZs = load_ps((float*)PositionZs.GetUnsafePtr() + i);
+
+				// var vel = Velocity[i];
+				v128 velXs = load_ps((float*)VelocityXs.GetUnsafePtr() + i);
+				v128 velYs = load_ps((float*)VelocityYs.GetUnsafePtr() + i);
+				v128 velZs = load_ps((float*)VelocityZs.GetUnsafePtr() + i);
+
+				// var dt = Dt;
+				v128 vdt = new v128(Dt);
+				
+				// var newPosX = pos.x + vel.x * dt;
+				// var newPosY = pos.y + vel.y * dt;
+				// var newPosZ = pos.z + vel.z * dt;
+				var newPosXs = add_ps(posXs, mul_ps(velXs, vdt));
+				var newPosYs = add_ps(posYs, mul_ps(velYs, vdt));
+				var newPosZs = add_ps(posZs, mul_ps(velZs, vdt));
+
+				// Position[i] = newPos;
+				store_ps((float*)PositionXs.GetUnsafePtr() + i, newPosXs);
+				store_ps((float*)PositionYs.GetUnsafePtr() + i, newPosYs);
+				store_ps((float*)PositionZs.GetUnsafePtr() + i, newPosZs);
 			}
 		}
 	}
