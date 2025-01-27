@@ -7,89 +7,74 @@ using UnityEngine;
 namespace Code
 {
 	[BurstCompile]
-	public struct HealthJob : IJob
+	public struct HealthJob : IJobParallelFor
 	{
 		public NativeArray<float> Health;
-		
+
 		[ReadOnly]
 		public NativeArray<float> HealthRegen;
-		
+
 		public float MaxHealth;
 		public float Dt;
-		
-		public void Execute()
+
+		public void Execute(int i)
 		{
-			for (int i = 0; i < Health.Length; i++)
-			{
-				Health[i] = math.clamp(Health[i] + HealthRegen[i] * Dt, 0, MaxHealth);
-			}
+			Health[i] = math.clamp(Health[i] + HealthRegen[i] * Dt, 0, MaxHealth);
 		}
 	}
-	
+
 	[BurstCompile]
-	public struct StaminaJob : IJob
+	public struct StaminaJob : IJobParallelFor
 	{
 		public NativeArray<float> Stamina;
-		
+
 		[ReadOnly]
 		public NativeArray<float> StaminaRegen;
-		
+
 		public float MaxStamina;
 		public float Dt;
-		
-		public void Execute()
+
+		public void Execute(int i)
 		{
-			for (int i = 0; i < Stamina.Length; i++)
-			{
-				Stamina[i] = math.clamp(Stamina[i] + StaminaRegen[i] * Dt, 0, MaxStamina);
-			}
+			Stamina[i] = math.clamp(Stamina[i] + StaminaRegen[i] * Dt, 0, MaxStamina);
 		}
 	}
 
 	[BurstCompile]
-	public struct PositionJob : IJob
+	public struct PositionJob : IJobParallelFor
+	{
+		public NativeArray<float2> Position;
+
+		[ReadOnly]
+		public NativeArray<float2> Velocity;
+
+		public float Dt;
+
+		public void Execute(int i)
+		{
+			Position[i] = Velocity[i] * Dt;
+		}
+	}
+
+	[BurstCompile]
+	public struct RespawnJob : IJobParallelFor
 	{
 		public NativeArray<bool> IsAlive;
 
 		[ReadOnly]
 		public NativeArray<float> RespawnTime;
-		
-		public float Time;
-		
-		public void Execute()
-		{
-			for (int i = 0; i < IsAlive.Length; i++)
-			{
-				if (Time > RespawnTime[i])
-				{
-					IsAlive[i] = true;
-				}
-			}
-		}
-	}
-	
-	[BurstCompile]
-	public struct RespawnJob : IJob
-	{
-		public NativeArray<bool> IsAlive;
 
-		[ReadOnly]
-		public NativeArray<float> RespawnTime;
-		
 		public float Time;
-		
-		public void Execute()
+
+		public void Execute(int i)
 		{
-			for (int i = 0; i < IsAlive.Length; i++)
+			if (Time > RespawnTime[i])
 			{
-				if (Time > RespawnTime[i])
-				{
-					IsAlive[i] = true;
-				}
+				IsAlive[i] = true;
 			}
 		}
 	}
-	
+
 	public class Game
 	{
 		private MonsterDataArray _aliveMonster;
@@ -103,7 +88,7 @@ namespace Code
 
 		private float _maxHealth;
 		private float _maxStamina;
-		
+
 		public void GameLoop()
 		{
 			var dt = Time.deltaTime;
@@ -115,14 +100,14 @@ namespace Code
 				MaxHealth = _maxHealth,
 				Health = _aliveMonster.Health,
 				HealthRegen = _aliveMonster.HealthRegen,
-			}.Schedule();
+			}.Schedule(_aliveMonsterCount, 64);
 
 			var positionJob = new PositionJob
 			{
-				Time = time,
-				IsAlive = _aliveMonster.IsAlive,
-				RespawnTime = _aliveMonster.RespawnTime
-			}.Schedule();
+				Dt = dt,
+				Position = _aliveMonster.Position,
+				Velocity = _aliveMonster.Velocity
+			}.Schedule(_aliveMonsterCount, 64);
 
 			var staminaJob = new StaminaJob
 			{
@@ -130,15 +115,15 @@ namespace Code
 				MaxStamina = _maxStamina,
 				Stamina = _aliveMonster.Stamina,
 				StaminaRegen = _aliveMonster.StaminaRegen,
-			}.Schedule();
+			}.Schedule(_aliveMonsterCount, 64);
 
 			var respawnJob = new RespawnJob
 			{
 				IsAlive = _aliveMonster.IsAlive,
 				RespawnTime = _aliveMonster.RespawnTime,
 				Time = time
-			};
-			
+			}.Schedule(_deadMonsterCount, 64);
+
 			// ...
 		}
 	}
