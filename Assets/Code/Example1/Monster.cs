@@ -2,7 +2,7 @@ using Unity.Mathematics;
 
 namespace Code
 {
-	public abstract class Monster
+	public struct MonsterData
 	{
 		public float2 Velocity { get; set; }
 		public float Health { get; set; }

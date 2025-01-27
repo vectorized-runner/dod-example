@@ -1,3 +1,5 @@
+using System;
+
 namespace Code
 {
 	public class Game
@@ -9,44 +11,44 @@ namespace Code
 
 		public void GameLoop()
 		{
-			foreach (var monster in _aliveSimpleMonsters)
+			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
 			{
 				monster.UpdateHealth();
 			}
-			foreach (var monster in _aliveSimpleMonsters)
+			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
 			{
 				monster.UpdatePosition();
 			}
-			foreach (var monster in _aliveSimpleMonsters)
+			foreach (ref var monster in _aliveSimpleMonsters.AsSpan())
 			{
 				monster.UpdateStamina();
 			}
-			foreach (var monster in _deadSimpleMonsters)
+			foreach (ref var monster in _deadSimpleMonsters.AsSpan())
 			{
 				monster.UpdateRespawn();
 			}
 			
 			// 
 			
-			foreach (var monster in _aliveDamagingMonsters)
+			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
-				monster.UpdateHealth();
+				monster.SimpleMonster.UpdateHealth();
 			}
-			foreach (var monster in _aliveDamagingMonsters)
+			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
-				monster.UpdatePosition();
+				monster.SimpleMonster.UpdatePosition();
 			}
-			foreach (var monster in _aliveDamagingMonsters)
+			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
-				monster.UpdateStamina();
+				monster.SimpleMonster.UpdateStamina();
 			}
-			foreach (var monster in _aliveDamagingMonsters)
+			foreach (ref var monster in _aliveDamagingMonsters.AsSpan())
 			{
 				monster.UpdateDamage();
 			}
-			foreach (var monster in _deadDamagingMonsters)
+			foreach (ref var monster in _deadDamagingMonsters.AsSpan())
 			{
-				monster.UpdateRespawn();
+				monster.SimpleMonster.UpdateRespawn();
 			}
 		}
 	}

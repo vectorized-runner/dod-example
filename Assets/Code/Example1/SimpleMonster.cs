@@ -3,29 +3,31 @@ using UnityEngine;
 
 namespace Code
 {
-	public class SimpleMonster : Monster
+	public struct SimpleMonster
 	{
+		public MonsterData Data;
+		
 		public void UpdateRespawn()
 		{
-			if (Time.time > RespawnTime)
+			if (Time.time > Data.RespawnTime)
 			{
-				IsAlive = true;
+				Data.IsAlive = true;
 			}
 		}
 
 		public void UpdateStamina()
 		{
-			Stamina = math.clamp(Stamina + StaminaRegen * Time.deltaTime, 0, MaxStamina);
+			Data.Stamina = math.clamp(Data.Stamina + Data.StaminaRegen * Time.deltaTime, 0, Data.MaxStamina);
 		}
 
 		public void UpdatePosition()
 		{
-			Position += Velocity * Time.deltaTime;
+			Data.Position += Data.Velocity * Time.deltaTime;
 		}
 
 		public void UpdateHealth()
 		{
-			Health = math.clamp(Health + HealthRegen * Time.deltaTime, 0, MaxHealth);
+			Data.Health = math.clamp(Data.Health + Data.HealthRegen * Time.deltaTime, 0, Data.MaxHealth);
 		}
 	}
 }
