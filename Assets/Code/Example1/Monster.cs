@@ -13,7 +13,7 @@ namespace Code
 		public float MaxStamina { get; set; }
 		public int Target { get; set; }
 		public float2 Position { get; set; }
-		public bool IsAlive { get; set; }
 		public float RespawnTime { get; set; }
+		public bool IsAlive { get; set; }
 	}
 }

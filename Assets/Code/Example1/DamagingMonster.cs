@@ -3,11 +3,16 @@ namespace Code
 	public class DamagingMonster : SimpleMonster
 	{
 		public int Damage { get; set; }
-		
-		public void DamaingMonsterUpdate()
+
+		public void DamagingMonsterUpdateAlive()
 		{
 			UpdateDamage();
-			SimpleMonsterUpdate();
+			SimpleMonsterUpdateAlive();
+		}
+
+		public void DamagingMonsterUpdateDead()
+		{
+			UpdateRespawn();
 		}
 
 		private void UpdateDamage()

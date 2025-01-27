@@ -5,21 +5,19 @@ namespace Code
 {
 	public class SimpleMonster : Monster
 	{
-		public void SimpleMonsterUpdate()
+		public void SimpleMonsterUpdateAlive()
 		{
-			if (IsAlive)
-			{
-				UpdateHealth();
-				UpdatePosition();
-				UpdateStamina();
-			}
-			else
-			{
-				UpdateRespawn();
-			}
+			UpdateHealth();
+			UpdatePosition();
+			UpdateStamina();
 		}
 
-		private void UpdateRespawn()
+		public void SimpleMonsterUpdateDead()
+		{
+			UpdateRespawn();
+		}
+
+		protected void UpdateRespawn()
 		{
 			if (Time.time > RespawnTime)
 			{

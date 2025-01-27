@@ -2,18 +2,31 @@ namespace Code
 {
 	public class Game
 	{
-		private SimpleMonster[] _simpleMonsters;
-		private DamagingMonster[] _damagingMonsters;
-		
+		private SimpleMonster[] _aliveSimpleMonsters;
+		private SimpleMonster[] _deadSimpleMonsters;
+		private DamagingMonster[] _aliveDamagingMonsters;
+		private DamagingMonster[] _deadDamagingMonsters;
+
 		public void GameLoop()
 		{
-			foreach (var monster in _simpleMonsters)
+			foreach (var monster in _aliveSimpleMonsters)
 			{
-				monster.SimpleMonsterUpdate();
+				monster.SimpleMonsterUpdateAlive();
 			}
-			foreach (var monster in _damagingMonsters)
+
+			foreach (var monster in _deadSimpleMonsters)
 			{
-				monster.DamaingMonsterUpdate();
+				monster.SimpleMonsterUpdateDead();
+			}
+
+			foreach (var monster in _aliveDamagingMonsters)
+			{
+				monster.DamagingMonsterUpdateAlive();
+			}
+
+			foreach (var monster in _deadDamagingMonsters)
+			{
+				monster.DamagingMonsterUpdateDead();
 			}
 		}
 	}
